@@ -14,6 +14,11 @@ class Category extends Model
     public $incrementing = false;
     protected $primaryKey = 'id';
 
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function articles(): BelongsToMany
     {
         return $this->belongsToMany(Article::class);

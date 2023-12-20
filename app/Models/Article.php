@@ -15,6 +15,12 @@ class Article extends Model
     public $incrementing = false;
     protected $primaryKey = 'id';
 
+    protected $casts = [
+        'published_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author');
