@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Auth\AuthController;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -31,3 +31,8 @@ Route::group(['prefix' => 'auth/'], function (Router $router) {
         ->get('myself', [AuthController::class, 'mySelf'])
         ->name('myself');
 });
+
+Route::middleware('jwt.auth')->group(function (Router $router) {
+    $router->apiResource('articles', ArticleController::class);
+});
+
