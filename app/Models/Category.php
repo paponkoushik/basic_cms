@@ -14,15 +14,6 @@ class Category extends Model
     public $incrementing = false;
     protected $primaryKey = 'id';
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->id = (string) Str::uuid();
-        });
-    }
-
     public function articles(): BelongsToMany
     {
         return $this->belongsToMany(Article::class);

@@ -15,15 +15,6 @@ class Article extends Model
     public $incrementing = false;
     protected $primaryKey = 'id';
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->id = (string) Str::uuid();
-        });
-    }
-
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author');
