@@ -10,12 +10,7 @@ class AuthService
 {
     public function login(array $request): JsonResponse
     {
-        if (Auth::attempt(['email' => $request['email_or_username'], 'password' => $request['password']])) {
-            $token = JWTAuth::fromUser(Auth::user());
-            return response()->json(compact('token'));
-        }
-
-        if (Auth::attempt(['username' => $request['email_or_username'], 'password' => $request['password']])) {
+        if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
             $token = JWTAuth::fromUser(Auth::user());
             return response()->json(compact('token'));
         }
