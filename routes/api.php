@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Category\CategoryController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -34,5 +35,6 @@ Route::group(['prefix' => 'auth/'], function (Router $router) {
 
 Route::middleware('jwt.auth')->group(function (Router $router) {
     $router->apiResource('articles', ArticleController::class);
+    $router->get('categories', [CategoryController::class, 'index'])->name('categories.index');
 });
-
+//Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');

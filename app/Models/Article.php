@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,6 +10,7 @@ use Illuminate\Support\Str;
 
 class Article extends Model
 {
+    use HasUuids;
     protected $fillable = ['slug', 'title', 'content', 'author', 'published_at'];
 
     protected $keyType = 'string';
