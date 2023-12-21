@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Category\CategoryController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
@@ -28,13 +29,27 @@ Route::group(['prefix' => 'auth/'], function (Router $router) {
         ->post('refresh', [AuthController::class, 'refresh'])
         ->name('refresh');
 
-    $router->middleware('auth:api')
-        ->get('myself', [AuthController::class, 'mySelf'])
-        ->name('myself');
+    $router->middleware(['jwt.auth'])->group(function () use($router) {
+        $router->get('article', [UserController::class, 'getAuthArticles'])
+            ->name('auth.article');
+
+        $router->get('myself', [AuthController::class, 'mySelf'])
+            ->name('myself');
+    });
+
 });
 
 Route::middleware('jwt.auth')->group(function (Router $router) {
     $router->apiResource('articles', ArticleController::class);
-    $router->get('categories', [CategoryController::class, 'index'])->name('categories.index');
+
+    $router->group(['prefix' => 'category'], function () use ($router) {
+
+        $router->get('list', [CategoryController::class, 'index'])->name('categories.index');
+
+        $router->get('article/{category}', [CategoryController::class, 'getArticle'])
+            ->name('category.article');
+    });
+
+
+
 });
-//Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');

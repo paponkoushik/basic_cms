@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Category;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Services\Category\CategoryService;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CategoryController extends Controller
 {
@@ -16,5 +18,10 @@ class CategoryController extends Controller
     public function index()
     {
         return $this->service->getCategories();
+    }
+
+    public function getArticle(Category $category): AnonymousResourceCollection
+    {
+        return $this->service->setModel($category)->getArticles();
     }
 }

@@ -2,12 +2,13 @@
 
 namespace App\Services\Category;
 
+use App\Http\Resources\Article\ArticleResource;
 use App\Models\Category;
+use App\Services\BaseService;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class CategoryService
+class CategoryService extends BaseService
 {
-    protected $model;
-
     public function __construct(Category $category)
     {
         $this->model = $category;
@@ -18,5 +19,14 @@ class CategoryService
         return cache()->rememberForever('categories', function () {
             return $this->model->all();
         });
+    }
+
+    public function getArticles(): AnonymousResourceCollection
+    {
+        return ArticleResource::collection(
+            $this->model->articles()
+                ->with('user', 'categories')
+                ->get()
+        );
     }
 }

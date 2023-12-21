@@ -4,25 +4,18 @@ namespace App\Services\Article;
 
 use App\Http\Resources\Article\ArticleResource;
 use App\Models\Article;
+use App\Services\BaseService;
 use App\Services\Traits\HasAttrs;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
 
-class ArticleService
+class ArticleService extends BaseService
 {
-    use HasAttrs;
-    protected $model;
     public function __construct(Article $article)
     {
         $this->model = $article;
     }
 
-    public function setModel(Article $article): static
-    {
-        $this->model = $article;
-
-        return $this;
-    }
     public function getArticles(): AnonymousResourceCollection
     {
         return ArticleResource::collection(

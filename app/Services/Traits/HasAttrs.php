@@ -2,11 +2,19 @@
 
 namespace App\Services\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 trait HasAttrs
 {
     protected array $attributes = [];
+
+    public function setModel(Model $model): self
+    {
+        $this->model = $model;
+        return $this;
+    }
+
 
     public function setAttrs(array $attrs): self
     {
