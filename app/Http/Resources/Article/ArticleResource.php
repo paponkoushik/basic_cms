@@ -15,7 +15,7 @@ class ArticleResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'author' => new AuthorResource($this->whenLoaded('author')),
+            'author' => new AuthorResource($this->whenLoaded('user')),
             'published_at' => $this->published_at->toDateTimeString(),
             'categories' => CategoryResource::collection($this->whenLoaded('categories')),
         ];

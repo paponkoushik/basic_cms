@@ -27,14 +27,14 @@ class ArticleService
     {
         return ArticleResource::collection(
             $this->model
-                ->with('author', 'categories')
+                ->with('user', 'categories')
                 ->get()
         );
     }
 
     public function getArticleData(): ArticleResource
     {
-        return new ArticleResource($this->model->load('author', 'categories'));
+        return new ArticleResource($this->model->load('user', 'categories'));
     }
 
     public function mergeFillAbleData(): self
@@ -53,6 +53,13 @@ class ArticleService
         $this->model = $this->model
             ->query()
             ->create($this->getAttrs());
+
+        return $this;
+    }
+
+    public function updateArticle(): self
+    {
+        $this->model->fill($this->getAttrs())->save();
 
         return $this;
     }

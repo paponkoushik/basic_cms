@@ -10,7 +10,6 @@ use App\Services\Article\ArticleService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
-use Mockery\Exception;
 
 class ArticleController extends Controller
 {
@@ -31,27 +30,50 @@ class ArticleController extends Controller
         return $this->service->setModel($article)->getArticleData();
     }
 
-
     public function store(ArticleRequest $request): JsonResponse
     {
-        DB::transaction( fn() =>
-            $this->service
-                ->setAttrs($request->only('title','content', 'categories'))
-                ->mergeFillAbleData()
-                ->storeArticle()
-                ->syncCategories()
-        );
+        try {
+            return DB::transaction( function () use ($request) {
+                $article = $this->service
+                    ->setAttrs($request->only('title','content', 'categories'))
+                    ->mergeFillAbleData()
+                    ->storeArticle()
+                    ->syncCategories()
+                    ->getArticleData();
 
-        return response()->json(['message' => 'Data has been stored successfully']);
+                return response()->json(['message' => 'Data has been stored successfully', 'article' => $article], 201);
+            });
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 500);
+        }
     }
 
-    public function update(ArticleRequest $request, Article $article)
+    public function update(ArticleRequest $request, Article $article): JsonResponse
     {
+        try {
+            return DB::transaction( function () use ($request, $article) {
+                $article = $this->service
+                    ->setAttrs($request->only('title','content', 'categories'))
+                    ->setModel($article)
+                    ->updateArticle()
+                    ->syncCategories()
+                    ->getArticleData();
 
+                return response()->json(['message' => 'Data has been updated successfully', 'article' => $article], 200);
+            });
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 500);
+        }
     }
-//
-//    public function destroy(Article $article)
-//    {
-//    }
+
+    public function destroy(Article $article): JsonResponse
+    {
+        try {
+            $article->delete();
+            return response()->json(['message' => 'data has been deleted successfully'], 200);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 500);
+        }
+    }
 
 }
